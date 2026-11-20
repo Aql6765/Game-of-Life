@@ -15,8 +15,6 @@ header {
     color: #FAFAFA;
 }
 
-
-
 .sim {
     background-color: #282828;
     height: 65vh;
@@ -28,4 +26,58 @@ canvas {
     width: 100%;
     height: 100%;
     display: block;
+}
+
+.simSizeSmall {
+    height: 50px;
+    width: 80px;
+    color: #FAFAFA;
+    background-color: #090909;
+    border: 1px solid #FAFAFA;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.simSizeMedium {
+    height: 50px;
+    width: 80px;
+    color: #FAFAFA;
+    background-color: #090909;
+    border: 1px solid #FAFAFA;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.simSizeLarge {
+    height: 50px;
+    width: 80px;
+    color: #FAFAFA;
+    background-color: #090909;
+    border: 1px solid #FAFAFA;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.simSizeSmall:hover {
+    background-color: #FAFAFA;
+    color: #090909;
+    transform: translateY(-2px);
+}
+
+.simSizeMedium:hover {
+    background-color: #FAFAFA;
+    color: #090909;
+    transform: translateY(-2px);
+}
+
+.simSizeLarge:hover {
+    background-color: #FAFAFA;
+    color: #090909;
+    transform: translateY(-2px);
 }
