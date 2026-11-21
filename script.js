@@ -3,11 +3,17 @@ const ctx = canvas.getContext("2d");
 const smallButton = document.querySelector(".simSizeSmall");
 const mediumButton = document.querySelector(".simSizeMedium");
 const largeButton = document.querySelector(".simSizeLarge");
+const clearButton = document.querySelector(".clearButton");
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
+let visitedCells = new Set();
+let isDrawing = false;
 let grid = [];
 let columns = 80;
 let rows = 50;
+let lastRow = null;
+let lastColumn = null;
+let gridSize = "medium";
 function createGrid() {
     grid = [];
     for (let r = 1; r <= rows; r++) {
@@ -38,27 +44,7 @@ function drawGrid() {
         }
     }
 }
-createGrid();
-drawGrid();
-smallButton.addEventListener("click", () => {
-    columns = 40;
-    rows = 25;
-    createGrid();
-    drawGrid();
-});
-mediumButton.addEventListener("click", () => {
-    columns = 80;
-    rows = 50;
-    createGrid();
-    drawGrid();
-});
-largeButton.addEventListener("click", () => {
-    columns = 120;
-    rows = 75;
-    createGrid();
-    drawGrid();
-});
-canvas.addEventListener("click", (event) => {
+function paintCell(event) {
     const cellSize = Math.min(canvas.width / columns, canvas.height / rows);
     const gridWidth = cellSize * columns;
     const gridHeight = cellSize * rows;
@@ -69,8 +55,102 @@ canvas.addEventListener("click", (event) => {
     if (column < 1 || column > columns || row < 1 || row > rows) {
         return;
     }
-    grid[row - 1][column - 1] = !grid[row - 1][column - 1];
-    console.log(column, row);
-    console.log(grid[row - 1][column - 1]);
+    if (lastRow === null || lastColumn === null) {
+        drawLine(column, row, column, row);
+    } else {
+        drawLine(lastColumn, lastRow, column, row);
+    }
+    lastColumn = column;
+    lastRow = row;
     drawGrid();
+}
+function drawLine(x1, y1, x2, y2) {
+    const dx = Math.abs(x2 - x1);
+    const dy = Math.abs(y2 - y1);
+    const sx = x1 < x2 ? 1 : -1;
+    const sy = y1 < y2 ? 1 : -1;
+    let err = dx - dy;
+    let e2;
+    while (true) {
+        const cellKey = `${y1},${x1}`;
+        if (!visitedCells.has(cellKey)) {
+            visitedCells.add(cellKey);
+            grid[y1 - 1][x1 - 1] = !grid[y1 - 1][x1 - 1]
+        }
+        if (x1 === x2 && y1 === y2) {
+            break;
+        };
+        e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x1 += sx;
+        };
+        if (e2 < dx) {
+            err += dx;
+            y1 += sy;
+        };
+    }
+}
+createGrid();
+drawGrid();
+smallButton.addEventListener("click", () => {
+    columns = 40;
+    rows = 25;
+    gridSize = "small";
+    createGrid();
+    drawGrid();
+});
+mediumButton.addEventListener("click", () => {
+    columns = 80;
+    rows = 50;
+    gridSize = "medium";
+    createGrid();
+    drawGrid();
+});
+largeButton.addEventListener("click", () => {
+    columns = 120;
+    rows = 75;
+    gridSize = "large";
+    createGrid();
+    drawGrid();
+});
+canvas.addEventListener("mousedown", (event) => {
+    isDrawing = true;
+    visitedCells.clear();
+    lastRow = null;
+    lastColumn = null;
+    paintCell(event);
+})
+window.addEventListener("mouseup", () => {
+    isDrawing = false;
+    lastRow = null;
+    lastColumn = null;
+})
+canvas.addEventListener("mousemove", (event) => {
+    if (isDrawing) {
+        paintCell(event);
+    }
+})
+clearButton.addEventListener("click", () => {
+    if (gridSize === "small") {
+        columns = 40;
+        rows = 25;
+        gridSize = "small";
+        createGrid();
+        drawGrid();
+    }
+    if (gridSize === "medium") {
+        columns = 80;
+        rows = 50;
+        gridSize = "medium";
+        createGrid();
+        drawGrid();
+    }
+    if (gridSize === "large") {
+        columns = 120;
+        rows = 75;
+        gridSize = "large";
+        createGrid();
+        drawGrid();
+    }
 })
