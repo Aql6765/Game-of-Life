@@ -91,6 +91,40 @@ function drawLine(x1, y1, x2, y2) {
         };
     }
 }
+function countNeighbors(row, column) {
+    let aliveNeighbors = 0;
+    for (let r = -1; r <= 1; r++) {
+        for (let c = -1; c <= 1; c++) {
+            if (r === 0 && c === 0) {
+                continue;
+            }
+            const neighborRow = row + r;
+            const neighborColumn = column + c;
+            if (neighborRow >= 0 && neighborRow < rows && neighborColumn >= 0 && neighborColumn < columns) {
+                if (grid[neighborRow][neighborColumn] === true) {
+                    aliveNeighbors += 1
+                }
+            }
+        }
+    }
+    return aliveNeighbors
+}
+function calculateNextGen(row, column) {
+    const isAlive = grid[row][column];
+    const aliveNeighbors = countNeighbors(row, column);
+    if (isAlive && aliveNeighbors < 2) {
+        return false;
+    }
+    else if (isAlive && (aliveNeighbors === 2 || aliveNeighbors === 3)) {
+        return true;
+    }
+    else if (isAlive && aliveNeighbors > 3) {
+        return false;
+    }
+    else if (!isAlive && aliveNeighbors === 3) {
+        return true;
+    }
+}
 createGrid();
 drawGrid();
 smallButton.addEventListener("click", () => {
