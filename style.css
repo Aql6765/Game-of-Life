@@ -99,3 +99,75 @@ canvas {
     color: #090909;
     transform: translateY(-2px);
 }
+
+.randomButton {
+    height: 50px;
+    width: 80px;
+    color: #FAFAFA;
+    background-color: #090909;
+    border: 1px solid #FAFAFA;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.randomButton:hover {
+    background-color: #93dd1d;
+    color: #090909;
+    transform: translateY(-2px);
+}
+
+.startButton {
+    height: 50px;
+    width: 80px;
+    color: #FAFAFA;
+    background-color: #090909;
+    border: 1px solid #FAFAFA;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.startButton:hover {
+    background-color: #93dd1d;
+    color: #090909;
+    transform: translateY(-2px);
+}
+
+.stepButton {
+    height: 50px;
+    width: 80px;
+    color: #FAFAFA;
+    background-color: #090909;
+    border: 1px solid #FAFAFA;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.stepButton:hover {
+    background-color: #93dd1d;
+    color: #090909;
+    transform: translateY(-2px);
+}
+
+.stopButton {
+    height: 50px;
+    width: 80px;
+    color: #FAFAFA;
+    background-color: #090909;
+    border: 1px solid #FAFAFA;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.stopButton:hover {
+    background-color: #93dd1d;
+    color: #090909;
+    transform: translateY(-2px);
+}

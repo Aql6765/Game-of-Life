@@ -4,6 +4,10 @@ const smallButton = document.querySelector(".simSizeSmall");
 const mediumButton = document.querySelector(".simSizeMedium");
 const largeButton = document.querySelector(".simSizeLarge");
 const clearButton = document.querySelector(".clearButton");
+const randomButton = document.querySelector(".randomButton");
+const startButton = document.querySelector(".startButton");
+const stepButton = document.querySelector(".stepButton");
+const stopButton = document.querySelector(".stopButton");
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 let visitedCells = new Set();
@@ -14,6 +18,8 @@ let rows = 50;
 let lastRow = null;
 let lastColumn = null;
 let gridSize = "medium";
+let simRunning = false;
+let simInterval;
 function createGrid() {
     grid = [];
     for (let r = 1; r <= rows; r++) {
@@ -125,6 +131,25 @@ function calculateNextGen(row, column) {
         return true;
     }
 }
+function createNextGrid() {
+    let nextGrid = [];
+    for (let r = 0; r < rows; r++) {
+        nextGrid[r] = [];
+        for (let c = 0; c < columns; c++) {
+            nextGrid[r][c] = calculateNextGen(r, c);
+        }
+    }
+    grid = nextGrid;
+    drawGrid();
+}
+function randomGrid() {
+    createGrid();
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            grid[r][c] = Math.round(Math.random()) === 1 ? true : false;
+        }
+    }
+}
 createGrid();
 drawGrid();
 smallButton.addEventListener("click", () => {
@@ -186,5 +211,40 @@ clearButton.addEventListener("click", () => {
         gridSize = "large";
         createGrid();
         drawGrid();
+    }
+})
+randomButton.addEventListener("click", () => {
+    if (simRunning === false) {
+        randomGrid();
+        drawGrid();
+    }
+    else if (simRunning === true) {
+        simRunning = false;
+        clearInterval(simInterval);
+        randomGrid();
+        drawGrid();
+    }
+})
+startButton.addEventListener("click", () => {
+    if (simRunning === false) {
+        simRunning = true;
+        simInterval = setInterval(() => {
+            createNextGrid();
+        }, 125);
+    }
+    else {
+        return;
+    }
+})
+stepButton.addEventListener("click", () => {
+    createNextGrid();
+});
+stopButton.addEventListener("click", () => {
+    if (simRunning === true) {
+        simRunning = false;
+        clearInterval(simInterval);
+    }
+    else {
+        return;
     }
 })
