@@ -10,7 +10,9 @@
 
 <body>
     <header>The Game of Life! :3</header>
-    <section class="stats"></section>
+    <section class="stats">
+        <p style="color: #FAFAFA; font-size: 20px;">Generation: <span id="genNum">0</span></p>
+    </section>
     <section class="sim">
         <canvas></canvas>
     </section>
@@ -21,6 +23,9 @@
         <br>
         <button class="clearButton">Clear</button>
         <button class="randomButton">Random</button>
+        <br>
+        <label for="speedSlider" style="color: #FAFAFA; font-size: 18px;">Speed:</label>
+        <input type="range" min="10" max="500" value="125" class="speedSlider">
         <br>
         <button class="startButton">Start</button>
         <button class="stepButton">Step</button>

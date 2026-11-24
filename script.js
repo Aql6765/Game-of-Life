@@ -8,6 +8,8 @@ const randomButton = document.querySelector(".randomButton");
 const startButton = document.querySelector(".startButton");
 const stepButton = document.querySelector(".stepButton");
 const stopButton = document.querySelector(".stopButton");
+const speedSlider = document.querySelector(".speedSlider");
+const genNumText = document.getElementById("genNum");
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 let visitedCells = new Set();
@@ -18,6 +20,7 @@ let rows = 50;
 let lastRow = null;
 let lastColumn = null;
 let gridSize = "medium";
+let generation = 0;
 let simRunning = false;
 let simInterval;
 function createGrid() {
@@ -156,22 +159,34 @@ smallButton.addEventListener("click", () => {
     columns = 40;
     rows = 25;
     gridSize = "small";
+    simRunning = false;
+    clearInterval(simInterval);
     createGrid();
     drawGrid();
+    generation = 0;
+    genNumText.textContent = generation;
 });
 mediumButton.addEventListener("click", () => {
     columns = 80;
     rows = 50;
     gridSize = "medium";
+    simRunning = false;
+    clearInterval(simInterval);
     createGrid();
     drawGrid();
+    generation = 0;
+    genNumText.textContent = generation;
 });
 largeButton.addEventListener("click", () => {
     columns = 120;
     rows = 75;
     gridSize = "large";
+    simRunning = false;
+    clearInterval(simInterval);
     createGrid();
     drawGrid();
+    generation = 0;
+    genNumText.textContent = generation;
 });
 canvas.addEventListener("mousedown", (event) => {
     isDrawing = true;
@@ -197,6 +212,8 @@ clearButton.addEventListener("click", () => {
         gridSize = "small";
         createGrid();
         drawGrid();
+        simRunning = false;
+        clearInterval(simInterval);
     }
     if (gridSize === "medium") {
         columns = 80;
@@ -204,6 +221,8 @@ clearButton.addEventListener("click", () => {
         gridSize = "medium";
         createGrid();
         drawGrid();
+        simRunning = false;
+        clearInterval(simInterval);
     }
     if (gridSize === "large") {
         columns = 120;
@@ -211,26 +230,46 @@ clearButton.addEventListener("click", () => {
         gridSize = "large";
         createGrid();
         drawGrid();
+        simRunning = false;
+        clearInterval(simInterval);
     }
+    generation = 0;
+    genNumText.textContent = generation;
 })
 randomButton.addEventListener("click", () => {
     if (simRunning === false) {
         randomGrid();
         drawGrid();
+        document.getElementById("genNum").textContent = 0;
     }
     else if (simRunning === true) {
         simRunning = false;
         clearInterval(simInterval);
         randomGrid();
         drawGrid();
+        document.getElementById("genNum").textContent = 0;
+    }
+})
+speedSlider.addEventListener("input", () => {
+    const interval = 510 - speedSlider.value;
+    if (simRunning === true) {
+        clearInterval(simInterval);
+        simInterval = setInterval(() => {
+            createNextGrid();
+            generation += 1;
+            genNumText.textContent = generation;
+        }, interval);
     }
 })
 startButton.addEventListener("click", () => {
+    const interval = 510 - speedSlider.value;
     if (simRunning === false) {
         simRunning = true;
         simInterval = setInterval(() => {
             createNextGrid();
-        }, 125);
+            generation += 1;
+            genNumText.textContent = generation;
+        }, interval);
     }
     else {
         return;
@@ -238,6 +277,8 @@ startButton.addEventListener("click", () => {
 })
 stepButton.addEventListener("click", () => {
     createNextGrid();
+    generation += 1;
+    genNumText.textContent = generation;
 });
 stopButton.addEventListener("click", () => {
     if (simRunning === true) {
