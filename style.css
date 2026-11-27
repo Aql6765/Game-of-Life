@@ -7,8 +7,8 @@ body {
     align-items: center;
     flex-direction: column;
     height: 100vh;
-    gap: 20px;
-    margin: 10px;
+    gap: 3px;
+    margin: 4px;
 }
 
 header {
@@ -17,7 +17,7 @@ header {
 
 .sim {
     background-color: #282828;
-    height: 65vh;
+    height: 75vh;
     width: min(900px, 98vw);
     border-radius: 10px;
 }
@@ -41,6 +41,21 @@ button {
 }
 
 button:hover {
+    background-color: #93dd1d;
+    color: #090909;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button:focus-visible {
+    outline: 2px solid #93dd1d;
+    outline-offset: 3px;
+}
+
+.startButton.run {
     background-color: #93dd1d;
     color: #090909;
     transform: translateY(-2px);
@@ -75,4 +90,33 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 50%;
     cursor: pointer;
     border: 2px solid #090909;
+}
+
+input[type="number"] {
+    width: 100px;
+    height: 50px;
+    box-sizing: border-box;
+    color: #FAFAFA;
+    background-color: #090909;
+    border: 1px solid #FAFAFA;
+    padding: 8px 12px;
+    border-radius: 4px;
+    outline: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+input[type="number"]::placeholder {
+    color: #888888;
+    opacity: 1;
+}
+
+input[type="number"]:focus {
+    border-color: #93dd1d;
+}
+
+.errorMsg {
+    color: #f90f0f;
+    display: none;
+    font-size: 18px;
 }

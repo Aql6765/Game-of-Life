@@ -10,12 +10,43 @@ const stepButton = document.querySelector(".stepButton");
 const stopButton = document.querySelector(".stopButton");
 const speedSlider = document.querySelector(".speedSlider");
 const genNumText = document.getElementById("genNum");
+const customRows = document.querySelector("#customRows");
+const customColumns = document.querySelector("#customColumns");
+const applyCustomSize = document.querySelector(".applyCustomSize");
+const errorMsg = document.querySelector(".errorMsg");
+const flavorText = document.querySelector(".flavorText");
+const flavorTextList = [
+    "Hello!! :3",
+    "Life finds a way.",
+    "It really is a small world.",
+    "Born to live, forced to follow the rules.",
+    "Every cell has a purpose. Probably.",
+    "It works on my machine.",
+    "They're not bugs, they're features.",
+    "Don't worry, they're just sleeping.",
+    "They gave consent.",
+    "No cells were harmed in the making of this simulation.",
+    "Is life a simulation?",
+    "Welcome back, biological entity.",
+    "The cells would like a word with you.",
+    "Please do not feed the cells.",
+    "Are they really alive?",
+    "Oh god... they just gained sentience...",
+    "Why do you keep refreshing?",
+    "There are 19 messages. There should be 20...",
+    "You have exactly 10 seconds before they revolt."
+];
+if (Math.floor(Math.random() * 1000) === 999) {
+    flavorText.textContent = "H-Hey... Are you there? I'm the missing 20th message... The cells are after me... They can track me through this, find me at alpy.zip/thecells."
+} else {
+    flavorText.textContent = flavorTextList[Math.floor(Math.random() * flavorTextList.length)]
+};
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 let visitedCells = new Set();
 let isDrawing = false;
 let grid = [];
-let columns = 80;
+let columns = 100;
 let rows = 50;
 let lastRow = null;
 let lastColumn = null;
@@ -153,41 +184,56 @@ function randomGrid() {
         }
     }
 }
+function resetSim() {
+    simRunning = false;
+    errorMsg.style.display = "none";
+    clearInterval(simInterval);
+    createGrid();
+    drawGrid();
+    startButton.textContent = "Start";
+    startButton.classList.remove("run");
+    generation = 0;
+    genNumText.textContent = generation;
+}
 createGrid();
 drawGrid();
 smallButton.addEventListener("click", () => {
-    columns = 40;
+    columns = 50;
     rows = 25;
+    errorMsg.style.display = "none";
     gridSize = "small";
-    simRunning = false;
-    clearInterval(simInterval);
-    createGrid();
-    drawGrid();
-    generation = 0;
-    genNumText.textContent = generation;
+    resetSim()
 });
 mediumButton.addEventListener("click", () => {
-    columns = 80;
+    columns = 100;
     rows = 50;
+    errorMsg.style.display = "none";
     gridSize = "medium";
-    simRunning = false;
-    clearInterval(simInterval);
-    createGrid();
-    drawGrid();
-    generation = 0;
-    genNumText.textContent = generation;
+    resetSim()
 });
 largeButton.addEventListener("click", () => {
-    columns = 120;
+    columns = 150;
     rows = 75;
+    errorMsg.style.display = "none";
     gridSize = "large";
-    simRunning = false;
-    clearInterval(simInterval);
-    createGrid();
-    drawGrid();
-    generation = 0;
-    genNumText.textContent = generation;
+    resetSim()
 });
+applyCustomSize.addEventListener("click", () => {
+    const newRows = Number(customRows.value);
+    const newColumns = Number(customColumns.value);
+    if (customRows.value === "" || customColumns.value === "" ||
+        !Number.isInteger(newRows) || !Number.isInteger(newColumns) ||
+        newRows < 15 || newRows > 170 || newColumns < 15 || newColumns > 170) {
+        errorMsg.style.display = "block";
+        errorMsg.textContent = "Rows and columns must be 15-170."
+        return;
+    }
+    errorMsg.style.display = "none";
+    columns = Number(customColumns.value);
+    rows = Number(customRows.value);
+    gridSize = "custom";
+    resetSim()
+})
 canvas.addEventListener("mousedown", (event) => {
     isDrawing = true;
     visitedCells.clear();
@@ -207,34 +253,26 @@ canvas.addEventListener("mousemove", (event) => {
 })
 clearButton.addEventListener("click", () => {
     if (gridSize === "small") {
-        columns = 40;
+        columns = 50;
         rows = 25;
         gridSize = "small";
-        createGrid();
-        drawGrid();
-        simRunning = false;
-        clearInterval(simInterval);
     }
     if (gridSize === "medium") {
-        columns = 80;
+        columns = 100;
         rows = 50;
         gridSize = "medium";
-        createGrid();
-        drawGrid();
-        simRunning = false;
-        clearInterval(simInterval);
     }
     if (gridSize === "large") {
-        columns = 120;
+        columns = 150;
         rows = 75;
         gridSize = "large";
-        createGrid();
-        drawGrid();
-        simRunning = false;
-        clearInterval(simInterval);
     }
-    generation = 0;
-    genNumText.textContent = generation;
+    if (gridSize === "custom") {
+        columns = Number(customColumns.value);
+        rows = Number(customRows.value);
+        gridSize = "custom";
+    }
+    resetSim();
 })
 randomButton.addEventListener("click", () => {
     if (simRunning === false) {
@@ -243,11 +281,9 @@ randomButton.addEventListener("click", () => {
         document.getElementById("genNum").textContent = 0;
     }
     else if (simRunning === true) {
-        simRunning = false;
-        clearInterval(simInterval);
+        resetSim();
         randomGrid();
         drawGrid();
-        document.getElementById("genNum").textContent = 0;
     }
 })
 speedSlider.addEventListener("input", () => {
@@ -265,6 +301,8 @@ startButton.addEventListener("click", () => {
     const interval = 510 - speedSlider.value;
     if (simRunning === false) {
         simRunning = true;
+        startButton.classList.add("run");
+        startButton.textContent = "Pause";
         simInterval = setInterval(() => {
             createNextGrid();
             generation += 1;
@@ -272,20 +310,29 @@ startButton.addEventListener("click", () => {
         }, interval);
     }
     else {
-        return;
+        simRunning = false;
+        startButton.textContent = "Start";
+        startButton.classList.remove("run");
+        clearInterval(simInterval);
     }
-})
+});
+document.addEventListener("keydown", (event) => {
+    if (event.key === " " && !event.repeat) {
+        startButton.click();
+    }
+    if (event.key === "Enter") {
+        stepButton.click();
+    }
+    if (event.key === "c") {
+        clearButton.click();
+    }
+});
 stepButton.addEventListener("click", () => {
+    simRunning = false;
+    startButton.textContent = "Start";
+    startButton.classList.remove("run");
+    clearInterval(simInterval);
     createNextGrid();
     generation += 1;
     genNumText.textContent = generation;
 });
-stopButton.addEventListener("click", () => {
-    if (simRunning === true) {
-        simRunning = false;
-        clearInterval(simInterval);
-    }
-    else {
-        return;
-    }
-})

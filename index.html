@@ -5,13 +5,16 @@
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
     <title>Game of Life</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <meta charset="UTF-8" />
 </head>
 
 <body>
     <header>The Game of Life! :3</header>
+    <p class="flavorText" style="color: #FAFAFA; font-size: 18px;">placeholder</p>
     <section class="stats">
         <p style="color: #FAFAFA; font-size: 20px;">Generation: <span id="genNum">0</span></p>
+        <p class="errorMsg"></p>
     </section>
     <section class="sim">
         <canvas></canvas>
@@ -21,6 +24,10 @@
         <button class="simSizeMedium">Medium</button>
         <button class="simSizeLarge">Large</button>
         <br>
+        <input type="number" min="15" max="170" id="customRows" placeholder="Rows">
+        <input type="number" min="15" max="170" id="customColumns" placeholder="Columns">
+        <button class="applyCustomSize">Apply</button>
+        <br>
         <button class="clearButton">Clear</button>
         <button class="randomButton">Random</button>
         <br>
@@ -29,7 +36,6 @@
         <br>
         <button class="startButton">Start</button>
         <button class="stepButton">Step</button>
-        <button class="stopButton">Stop</button>
     </footer>
 </body>
 
